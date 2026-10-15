@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+@custom-variant light (&:where(.light, .light *));
+
+/* Dark is the default theme; <html class="light"> switches to light. */
+:root {
+  --bg: #0a0f1e;
+  --bg-glow: rgba(139, 92, 246, 0.16);
+  --surface: #111830;
+  --surface-2: #18213d;
+  --border: #243055;
+  --fg: #e8edf8;
+  --muted: #8d98b5;
+  --accent: #8b5cf6;
+  --accent-2: #06b6d4;
+  --good: #22c55e;
+  --bad: #f43f5e;
+  --gold: #f59e0b;
+
+  --cell: #e3e9f6;
+  --cell-fg: #0b1020;
+  --cell-border: #94a3c4;
+  --cell-word: #c7b8ff;
+  --cell-active: #fbbf24;
+  --cell-number: #475374;
+  --cell-wrong: #ffd1da;
+  --cell-revealed: #c9f2dc;
+  color-scheme: dark;
+}
+
+:root.light {
+  --bg: #eef2fa;
+  --bg-glow: rgba(139, 92, 246, 0.10);
+  --surface: #ffffff;
+  --surface-2: #f4f6fc;
+  --border: #dbe2f0;
+  --fg: #111827;
+  --muted: #5b6785;
+
+  --cell: #ffffff;
+  --cell-fg: #0b1020;
+  --cell-border: #9aa7c4;
+  --cell-word: #ddd3ff;
+  --cell-active: #fcd34d;
+  --cell-number: #5b6785;
+  color-scheme: light;
+}
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, sans-serif;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-good: var(--good);
+  --color-bad: var(--bad);
+  --color-gold: var(--gold);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100dvh;
+  background-image:
+    radial-gradient(60rem 30rem at 10% -10%, var(--bg-glow), transparent 60%),
+    radial-gradient(50rem 25rem at 110% 10%, rgba(6, 182, 212, 0.08), transparent 60%);
+  background-attachment: fixed;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.85rem;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: transform 0.12s ease, background-color 0.15s ease, opacity 0.15s ease;
+  user-select: none;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #6d5df6 50%, var(--accent-2));
+  color: white;
+  box-shadow: 0 8px 24px -10px var(--accent);
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+.btn-ghost {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--fg);
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}

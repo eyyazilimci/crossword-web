@@ -1,0 +1,54 @@
+import type { Difficulty, GameMode, Orientation, PartOfSpeech } from '../api/types'
+
+export const modeLabel: Record<GameMode, string> = {
+  TrToEn: 'Türkçe → İngilizce',
+  EnToTr: 'İngilizce → Türkçe',
+}
+
+export const modeShort: Record<GameMode, string> = {
+  TrToEn: 'TR → EN',
+  EnToTr: 'EN → TR',
+}
+
+export const modeHint: Record<GameMode, string> = {
+  TrToEn: 'Türkçe kelimenin İngilizcesini yaz',
+  EnToTr: 'İngilizce kelimenin Türkçesini yaz',
+}
+
+export const difficultyLabel: Record<Difficulty, string> = {
+  Easy: 'Kolay',
+  Medium: 'Orta',
+  Hard: 'Zor',
+}
+
+export const difficultyHint: Record<Difficulty, string> = {
+  Easy: 'En sık 1000 kelime (A1–A2)',
+  Medium: 'Orta sıklık (A2–B1)',
+  Hard: 'Daha az sık (B1–B2)',
+}
+
+export const orientationLabel: Record<Orientation, string> = {
+  Across: 'Soldan Sağa',
+  Down: 'Yukarıdan Aşağı',
+}
+
+/** Part-of-speech label shown next to the clue, in the clue's language. */
+export const posLabel: Record<GameMode, Record<PartOfSpeech, string>> = {
+  TrToEn: { Noun: 'isim', Verb: 'fiil', Adjective: 'sıfat', Adverb: 'zarf', Other: '' },
+  EnToTr: { Noun: 'noun', Verb: 'verb', Adjective: 'adj.', Adverb: 'adv.', Other: '' },
+}
+
+export function formatDuration(totalSeconds: number) {
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  const s = totalSeconds % 60
+  const mm = String(m).padStart(2, '0')
+  const ss = String(s).padStart(2, '0')
+  return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`
+}
+
+export const difficultyColor: Record<Difficulty, string> = {
+  Easy: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
+  Medium: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
+  Hard: 'text-rose-400 bg-rose-500/10 border-rose-500/30',
+}
