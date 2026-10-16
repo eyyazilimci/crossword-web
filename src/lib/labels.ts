@@ -1,4 +1,4 @@
-import type { Difficulty, GameMode, Orientation, PartOfSpeech } from '../api/types'
+import type { DailyDecision, Difficulty, GameMode, Orientation, PartOfSpeech } from '../api/types'
 
 export const modeLabel: Record<GameMode, string> = {
   TrToEn: 'Türkçe → İngilizce',
@@ -39,6 +39,19 @@ export const posLabel: Record<GameMode, Record<PartOfSpeech, string>> = {
   TrToEn: { Noun: 'isim', Verb: 'fiil', Adjective: 'sıfat', Adverb: 'zarf', Other: '', Phrase: 'kalıp' },
   EnToTr: { Noun: 'noun', Verb: 'verb', Adjective: 'adj.', Adverb: 'adv.', Other: '', Phrase: 'phrase' },
 }
+
+/** One-line explanation of the adaptive daily difficulty. */
+export function dailyReason(d: DailyDecision): string {
+  if (!d.previousDifficulty) return 'İlk günlük bulmacan, kolaydan başlıyoruz'
+  if (d.previousAccuracy === null) return 'Son günlük bulmaca bitmedi, seviye aynı'
+  const pct = `%${Math.round(d.previousAccuracy * 100)}`
+  const change = difficultyOrder[d.difficulty] - difficultyOrder[d.previousDifficulty]
+  if (change > 0) return `Son başarın ${pct}, seviye yükseldi`
+  if (change < 0) return `Son başarın ${pct}, seviye düştü`
+  return `Son başarın ${pct}, seviye korunuyor`
+}
+
+const difficultyOrder: Record<Difficulty, number> = { Easy: 0, Medium: 1, Hard: 2, Expert: 3 }
 
 export function formatDuration(totalSeconds: number) {
   const h = Math.floor(totalSeconds / 3600)

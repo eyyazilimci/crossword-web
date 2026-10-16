@@ -203,10 +203,10 @@ export function PlayPage() {
           g.jumpEntry(e.shiftKey ? -1 : 1)
           break
         case 'Enter':
-          g.jumpEntry(1)
+          g.toggleDirection()
           break
         case ' ':
-          g.toggleDirection()
+          if (g.puzzle?.mode === 'EnToTr') g.convertLastLetter()
           break
         case 'Backspace':
         case 'Delete':
@@ -331,7 +331,7 @@ export function PlayPage() {
           </div>
           {showKeyboard && !completed && <OnScreenKeyboard mode={puzzle.mode} />}
           <p className="hidden text-center text-xs text-muted lg:block">
-            Yön tuşları: hareket · Boşluk: yön değiştir · Tab / Enter: sonraki kelime · Backspace: sil
+            {puzzle.mode === 'EnToTr' ? 'Boşluk: son harfi Türkçeye çevir (c→ç, s→ş, i→ı…) · ' : ''}Enter: yön değiştir · Tab: sonraki kelime · Yön tuşları: hareket · Backspace: sil
           </p>
         </div>
         <ClueLists />

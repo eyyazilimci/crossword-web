@@ -127,6 +127,14 @@ export interface Profile {
   lastPlayedOn: string | null
 }
 
+/** Why the daily puzzle got its difficulty: based on the previous daily puzzle of the same mode. */
+export interface DailyDecision {
+  difficulty: Difficulty
+  previousDifficulty: Difficulty | null
+  /** 0–1, null when the previous daily puzzle was not finished. */
+  previousAccuracy: number | null
+}
+
 export interface Dashboard {
   profile: Profile
   inProgress: {
@@ -139,7 +147,13 @@ export interface Dashboard {
     elapsedSeconds: number
     updatedAt: string
   }[]
-  daily: { mode: GameMode; puzzleId: string | null; completed: boolean }[]
+  daily: {
+    mode: GameMode
+    puzzleId: string | null
+    completed: boolean
+    difficulty: Difficulty
+    decision: DailyDecision
+  }[]
   libraryPuzzlesLeft: number
 }
 

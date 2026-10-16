@@ -8,7 +8,7 @@ import { api, ApiError } from '../api/client'
 import type { Difficulty, GameMode } from '../api/types'
 import { LevelCard } from '../components/LevelCard'
 import { toast } from '../components/Toaster'
-import { difficultyColor, difficultyHint, difficultyLabel, formatDuration, modeHint, modeLabel, modeShort } from '../lib/labels'
+import { dailyReason, difficultyColor, difficultyHint, difficultyLabel, formatDuration, modeHint, modeLabel, modeShort } from '../lib/labels'
 
 const MODES: GameMode[] = ['TrToEn', 'EnToTr']
 const DIFFICULTIES: Difficulty[] = ['Easy', 'Medium', 'Hard', 'Expert']
@@ -164,7 +164,9 @@ export function HomePage() {
           <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
             <CalendarDays size={18} className="text-gold" /> Günün bulmacası
           </h2>
-          <p className="mt-1 text-sm text-muted">Her gün iki yeni bulmaca. Serini korumak için birini çöz.</p>
+          <p className="mt-1 text-sm text-muted">
+            Her gün iki yeni bulmaca. Zorluk son günlük başarına göre ayarlanır: %90 ve üstü bir seviye yukarı, %70 altı bir seviye aşağı.
+          </p>
           <div className="mt-4 grid gap-2">
             {MODES.map((m) => {
               const daily = data?.daily.find((d) => d.mode === m)
@@ -177,7 +179,16 @@ export function HomePage() {
                 >
                   <div className="flex-1">
                     <div className="font-semibold">{modeLabel[m]}</div>
-                    <div className="text-xs text-muted">{daily?.completed ? 'Tamamlandı' : 'Orta seviye'}</div>
+                    {daily && (
+                      <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted">
+                        <span className={clsx('rounded-md border px-1.5 py-0.5 font-semibold', difficultyColor[daily.difficulty])}>
+                          {difficultyLabel[daily.difficulty]}
+                        </span>
+                        {daily.completed
+                          ? 'Tamamlandı'
+                          : daily.decision?.difficulty === daily.difficulty && dailyReason(daily.decision)}
+                      </div>
+                    )}
                   </div>
                   {daily?.completed ? <CheckCircle2 size={20} className="text-good" /> : <ArrowRight size={18} className="text-muted" />}
                 </button>

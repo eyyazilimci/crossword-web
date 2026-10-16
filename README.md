@@ -24,8 +24,8 @@ Uygulama http://localhost:5173 adresinde açılır. `/api` istekleri http://loca
 
 ## Özellikler
 
-- **İki mod:** TR → EN (Türkçe ipucu, İngilizce cevap) ve EN → TR (Türkçe harfli cevaplar: Ç, Ğ, İ, Ö, Ş, Ü)
-- **Üç zorluk:** Kolay, Orta, Zor. Ayrıca her mod için günün bulmacası.
+- **İki mod:** TR → EN (Türkçe ipucu, İngilizce cevap) ve EN → TR (Türkçe harfli cevaplar: Ç, Ğ, İ, Ö, Ş, Ü). Türkçe klavye gerekmez: harfi yazıp Boşluk'a bas.
+- **Dört zorluk:** Kolay, Orta, Zor, Uzman. Ayrıca her mod için günün bulmacası; zorluğu son günlük başarına göre otomatik ayarlanır.
 - **Kontrol:** Harf, kelime veya tüm bulmaca kontrol edilebilir. Hatalı harfler kırmızı görünür.
 - **İpucu:** Harf ya da kelime açılabilir. Açılan harfler yeşil köşeyle işaretlenir.
 - **Kayıt:** Oyun otomatik kaydedilir, kaldığın yerden devam edersin.
@@ -40,6 +40,7 @@ Uygulama http://localhost:5173 adresinde açılır. `/api` istekleri http://loca
 | --- | --- |
 | Harfler | Yaz ve ilerle |
 | Yön tuşları | Hücreler arası hareket (dik yönde ilk basış yönü değiştirir) |
-| Boşluk | Yön değiştir (yatay/dikey) |
-| Tab / Enter | Sonraki kelime (Shift+Tab önceki) |
+| Boşluk | EN → TR modunda son yazılan harfi Türkçeye çevirir (c→ç, g→ğ, i→ı, o→ö, s→ş, u→ü; tekrar basınca geri döner) |
+| Enter | Yön değiştir (yatay/dikey) |
+| Tab | Sonraki kelime (Shift+Tab önceki) |
 | Backspace | Sil ve geri git |

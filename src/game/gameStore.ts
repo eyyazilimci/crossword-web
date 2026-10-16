@@ -28,6 +28,8 @@ interface GameState {
   completed: boolean
   /** Bumped on every letter change so autosave knows when to run. */
   version: number
+  /** Cell typed into most recently; the Turkish-letter key converts it. Cleared when the cursor is moved by hand. */
+  lastTyped: number | null
 
   load(game: Game): void
   select(index: number): void
@@ -35,6 +37,7 @@ interface GameState {
   toggleDirection(): void
   input(letter: string): void
   backspace(): void
+  convertLastLetter(): void
   move(dRow: number, dCol: number): void
   jumpEntry(delta: 1 | -1): void
   tick(): void
@@ -44,6 +47,16 @@ interface GameState {
 }
 
 export const isOpenCell = (puzzle: Puzzle, index: number) => puzzle.layout[index] !== '#'
+
+/** Space toggles a letter with its Turkish counterpart, so no Turkish keyboard is needed. */
+const TURKISH_TOGGLE: Record<string, string> = {
+  C: 'Ç', Ç: 'C',
+  G: 'Ğ', Ğ: 'G',
+  İ: 'I', I: 'İ',
+  O: 'Ö', Ö: 'O',
+  S: 'Ş', Ş: 'S',
+  U: 'Ü', Ü: 'U',
+}
 
 export function lettersToString(letters: string[]) {
   return letters.map((l) => l || '.').join('')
@@ -102,6 +115,7 @@ export const useGame = create<GameState>((set, get) => ({
   elapsed: 0,
   completed: false,
   version: 0,
+  lastTyped: null,
 
   load({ puzzle, session }) {
     const { entries, links, numbers } = buildEntries(puzzle)
@@ -124,6 +138,7 @@ export const useGame = create<GameState>((set, get) => ({
       elapsed: session.elapsedSeconds,
       completed: session.status === 'Completed',
       version: 0,
+      lastTyped: null,
     })
   },
 
@@ -137,7 +152,7 @@ export const useGame = create<GameState>((set, get) => ({
       return
     }
     const hasCurrent = direction === 'Across' ? link.across !== undefined : link.down !== undefined
-    set({ selected: index, direction: hasCurrent ? direction : direction === 'Across' ? 'Down' : 'Across' })
+    set({ selected: index, direction: hasCurrent ? direction : direction === 'Across' ? 'Down' : 'Across', lastTyped: null })
   },
 
   selectEntry(entryIndex) {
@@ -145,7 +160,7 @@ export const useGame = create<GameState>((set, get) => ({
     const entry = entries[entryIndex]
     if (!entry) return
     const target = entry.cells.find((c) => !letters[c]) ?? entry.cells[0]
-    set({ selected: target, direction: entry.orientation })
+    set({ selected: target, direction: entry.orientation, lastTyped: null })
   },
 
   toggleDirection() {
@@ -174,7 +189,21 @@ export const useGame = create<GameState>((set, get) => ({
       const pos = cells.indexOf(state.selected)
       if (pos < cells.length - 1) selected = cells[pos + 1]
     }
-    set({ letters, wrong, selected, version })
+    set({ letters, wrong, selected, version, lastTyped: state.selected })
+  },
+
+  convertLastLetter() {
+    const state = get()
+    if (state.completed) return
+    const target = state.lastTyped ?? state.selected
+    const current = state.letters[target]
+    const converted = current ? TURKISH_TOGGLE[current] : undefined
+    if (!converted || state.revealed[target]) return
+    const letters = [...state.letters]
+    const wrong = [...state.wrong]
+    letters[target] = converted
+    wrong[target] = false
+    set({ letters, wrong, version: state.version + 1 })
   },
 
   backspace() {
@@ -201,7 +230,7 @@ export const useGame = create<GameState>((set, get) => ({
         }
       }
     }
-    set({ letters, wrong, selected, version: state.version + 1 })
+    set({ letters, wrong, selected, version: state.version + 1, lastTyped: null })
   },
 
   move(dRow, dCol) {
@@ -225,7 +254,7 @@ export const useGame = create<GameState>((set, get) => ({
       if (isOpenCell(puzzle, index)) {
         const next = links[index]
         const keep = wanted === 'Across' ? next.across !== undefined : next.down !== undefined
-        set({ selected: index, direction: keep ? wanted : wanted === 'Across' ? 'Down' : 'Across' })
+        set({ selected: index, direction: keep ? wanted : wanted === 'Across' ? 'Down' : 'Across', lastTyped: null })
         return
       }
     }
