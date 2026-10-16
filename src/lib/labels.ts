@@ -36,8 +36,8 @@ export const orientationLabel: Record<Orientation, string> = {
 
 /** Part-of-speech label shown next to the clue, in the clue's language. */
 export const posLabel: Record<GameMode, Record<PartOfSpeech, string>> = {
-  TrToEn: { Noun: 'isim', Verb: 'fiil', Adjective: 'sıfat', Adverb: 'zarf', Other: '' },
-  EnToTr: { Noun: 'noun', Verb: 'verb', Adjective: 'adj.', Adverb: 'adv.', Other: '' },
+  TrToEn: { Noun: 'isim', Verb: 'fiil', Adjective: 'sıfat', Adverb: 'zarf', Other: '', Phrase: 'kalıp' },
+  EnToTr: { Noun: 'noun', Verb: 'verb', Adjective: 'adj.', Adverb: 'adv.', Other: '', Phrase: 'phrase' },
 }
 
 export function formatDuration(totalSeconds: number) {

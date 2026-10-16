@@ -3,7 +3,7 @@
 export type GameMode = 'TrToEn' | 'EnToTr'
 export type Difficulty = 'Easy' | 'Medium' | 'Hard' | 'Expert'
 export type Orientation = 'Across' | 'Down'
-export type PartOfSpeech = 'Noun' | 'Verb' | 'Adjective' | 'Adverb' | 'Other'
+export type PartOfSpeech = 'Noun' | 'Verb' | 'Adjective' | 'Adverb' | 'Other' | 'Phrase'
 export type SessionStatus = 'InProgress' | 'Completed'
 export type PlayStatus = 'New' | 'InProgress' | 'Completed'
 
