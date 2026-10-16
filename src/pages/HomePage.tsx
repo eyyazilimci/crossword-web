@@ -11,7 +11,7 @@ import { toast } from '../components/Toaster'
 import { difficultyColor, difficultyHint, difficultyLabel, formatDuration, modeHint, modeLabel, modeShort } from '../lib/labels'
 
 const MODES: GameMode[] = ['TrToEn', 'EnToTr']
-const DIFFICULTIES: Difficulty[] = ['Easy', 'Medium', 'Hard']
+const DIFFICULTIES: Difficulty[] = ['Easy', 'Medium', 'Hard', 'Expert']
 
 function usePersistentState<T extends string>(key: string, initial: T) {
   const [value, setValue] = useState<T>(() => {
@@ -84,7 +84,7 @@ export function HomePage() {
               Kelimeleri <span className="gradient-text">çaprazla</span>, dili öğren.
             </h1>
             <p className="mt-2 max-w-xl text-muted">
-              En sık kullanılan ~2000 İngilizce kelimeden üretilen 21×21 çengel bulmacalar.
+              En sık kullanılan ~2100 İngilizce kelimeden üretilen 21×21 çengel bulmacalar.
             </p>
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -103,7 +103,7 @@ export function HomePage() {
               ))}
             </div>
 
-            <div className="mt-3 grid grid-cols-3 gap-3">
+            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {DIFFICULTIES.map((d) => (
                 <button
                   key={d}

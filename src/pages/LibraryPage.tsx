@@ -109,7 +109,7 @@ export function LibraryPage() {
         <Filter<Difficulty>
           value={difficulty}
           onChange={change<Difficulty>(setDifficulty)}
-          options={[[undefined, 'Tümü'], ['Easy', 'Kolay'], ['Medium', 'Orta'], ['Hard', 'Zor']]}
+          options={[[undefined, 'Tümü'], ['Easy', 'Kolay'], ['Medium', 'Orta'], ['Hard', 'Zor'], ['Expert', 'Uzman']]}
         />
         <Filter<PlayStatus>
           value={status}

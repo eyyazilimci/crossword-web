@@ -1,7 +1,7 @@
 // Mirrors the backend DTOs (enums are serialized as their C# names).
 
 export type GameMode = 'TrToEn' | 'EnToTr'
-export type Difficulty = 'Easy' | 'Medium' | 'Hard'
+export type Difficulty = 'Easy' | 'Medium' | 'Hard' | 'Expert'
 export type Orientation = 'Across' | 'Down'
 export type PartOfSpeech = 'Noun' | 'Verb' | 'Adjective' | 'Adverb' | 'Other'
 export type SessionStatus = 'InProgress' | 'Completed'

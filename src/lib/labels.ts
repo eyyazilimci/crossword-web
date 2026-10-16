@@ -19,12 +19,14 @@ export const difficultyLabel: Record<Difficulty, string> = {
   Easy: 'Kolay',
   Medium: 'Orta',
   Hard: 'Zor',
+  Expert: 'Uzman',
 }
 
 export const difficultyHint: Record<Difficulty, string> = {
-  Easy: 'En sık 1000 kelime (A1–A2)',
+  Easy: 'En sık kelimeler (A1–A2)',
   Medium: 'Orta sıklık (A2–B1)',
   Hard: 'Daha az sık (B1–B2)',
+  Expert: 'Listenin en zor kelimeleri (C1–C2)',
 }
 
 export const orientationLabel: Record<Orientation, string> = {
@@ -51,4 +53,5 @@ export const difficultyColor: Record<Difficulty, string> = {
   Easy: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
   Medium: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
   Hard: 'text-rose-400 bg-rose-500/10 border-rose-500/30',
+  Expert: 'text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/30',
 }
