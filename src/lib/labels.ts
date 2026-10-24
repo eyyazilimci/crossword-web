@@ -1,4 +1,4 @@
-import type { DailyDecision, Difficulty, GameMode, Orientation, PartOfSpeech } from '../api/types'
+import type { CefrLevel, DailyDecision, Difficulty, GameMode, Orientation, PartOfSpeech } from '../api/types'
 
 export const modeLabel: Record<GameMode, string> = {
   TrToEn: 'Türkçe → İngilizce',
@@ -60,6 +60,27 @@ export function formatDuration(totalSeconds: number) {
   const mm = String(m).padStart(2, '0')
   const ss = String(s).padStart(2, '0')
   return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`
+}
+
+export const cefrColor: Record<CefrLevel, string> = {
+  A1: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
+  A2: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
+  B1: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
+  B2: 'text-rose-400 bg-rose-500/10 border-rose-500/30',
+  C1: 'text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/30',
+  C2: 'text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/30',
+}
+
+/** Option letters of the grammar quiz. */
+export const optionLetters = ['A', 'B', 'C', 'D']
+
+/** Turkish label for a topic's smoothed accuracy (0–1). */
+export function strengthLabel(strength: number, seen: number) {
+  if (seen === 0) return 'Henüz oynanmadı'
+  if (strength >= 0.8) return 'Oturdu'
+  if (strength >= 0.6) return 'İyi gidiyor'
+  if (strength >= 0.4) return 'Gelişiyor'
+  return 'Zayıf'
 }
 
 export const difficultyColor: Record<Difficulty, string> = {

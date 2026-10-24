@@ -190,3 +190,93 @@ export interface Library {
   items: LibraryItem[]
   totalCount: number
 }
+
+// Grammar quiz
+
+export type CefrLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2'
+export type QuizKind = 'Daily' | 'Practice'
+export type GrammarCategory =
+  | 'Tenses'
+  | 'Conditionals'
+  | 'Subjunctive'
+  | 'Modals'
+  | 'VerbPatterns'
+  | 'PassiveCausative'
+  | 'ReportedSpeech'
+  | 'RelativeClauses'
+  | 'InversionEmphasis'
+  | 'Linkers'
+  | 'Comparison'
+  | 'TagsAgreement'
+  | 'ArticlesPrepositions'
+
+export interface QuizQuestion {
+  position: number
+  questionId: number
+  topic: string
+  topicTitle: string
+  category: GrammarCategory
+  level: CefrLevel
+  /** The gap is written as "___"; two-gap questions have options like "a / b". */
+  prompt: string
+  options: string[]
+  /** null until answered; the correct option and explanation are revealed only after answering. */
+  chosenIndex: number | null
+  correctIndex: number | null
+  explanation: string | null
+}
+
+export interface QuizSession {
+  id: string
+  kind: QuizKind
+  dailyDate: string | null
+  topic: string | null
+  topicTitle: string | null
+  status: SessionStatus
+  correctCount: number
+  answeredCount: number
+  questions: QuizQuestion[]
+  startedAt: string
+  completedAt: string | null
+}
+
+export interface AnswerResult {
+  correct: boolean
+  correctIndex: number
+  explanation: string
+  completed: boolean
+  correctCount: number
+  answeredCount: number
+  questionCount: number
+}
+
+export interface TopicStats {
+  code: string
+  title: string
+  category: GrammarCategory
+  categoryTitle: string
+  questionCount: number
+  seenCount: number
+  correctCount: number
+  /** Smoothed accuracy 0–1; 0.5 when the topic has not been played. */
+  strength: number
+}
+
+export interface QuizOverview {
+  today: { sessionId: string | null; completed: boolean; answeredCount: number; correctCount: number; questionCount: number }
+  currentStreak: number
+  longestStreak: number
+  answeredCount: number
+  correctCount: number
+  targetLevel: CefrLevel
+  topics: TopicStats[]
+  recent: {
+    sessionId: string
+    kind: QuizKind
+    dailyDate: string | null
+    topicTitle: string | null
+    correctCount: number
+    questionCount: number
+    completedAt: string
+  }[]
+}
