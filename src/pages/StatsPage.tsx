@@ -1,14 +1,25 @@
 import { Link } from 'react-router'
-import { useQuery } from '@tanstack/react-query'
-import { Award, BookOpen, History, Target } from 'lucide-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { Award, BookOpen, History, Target, X } from 'lucide-react'
 import clsx from 'clsx'
-import { api } from '../api/client'
+import { api, ApiError } from '../api/client'
+import type { GameMode } from '../api/types'
 import { LevelCard } from '../components/LevelCard'
+import { toast } from '../components/Toaster'
 import { difficultyLabel, formatDuration, modeLabel, modeShort } from '../lib/labels'
 
 export function StatsPage() {
   const stats = useQuery({ queryKey: ['stats'], queryFn: api.stats })
   const data = stats.data
+  const queryClient = useQueryClient()
+  const remove = useMutation({
+    mutationFn: (word: { mode: GameMode; wordId: number; english: string }) => api.removeUnknownWord(word.mode, word.wordId),
+    onSuccess: (_, word) => {
+      toast(`${word.english} listeden çıkarıldı.`, 'good')
+      return queryClient.invalidateQueries({ queryKey: ['stats'] })
+    },
+    onError: (e) => toast(e instanceof ApiError ? e.message : 'Kelime çıkarılamadı', 'bad'),
+  })
 
   if (!data) {
     return <div className="grid h-[50dvh] place-items-center text-muted">{stats.isError ? 'Yüklenemedi.' : 'Yükleniyor…'}</div>
@@ -78,33 +89,49 @@ export function StatsPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="card p-5">
           <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-semibold">
-            <Target size={18} className="text-bad" /> Zorlandığın kelimeler
+            <Target size={18} className="text-bad" /> Bilinemeyen kelimeler
           </h2>
           {data.weakWords.length === 0 ? (
-            <p className="text-sm text-muted">Henüz yok. Yanlış yaptığın kelimeler burada listelenir ve bulmacalarda daha sık çıkar.</p>
+            <p className="text-sm text-muted">Henüz yok. Bulmaca sonunda seçtiğin kelimeler burada listelenir ve arada yeniden karşına çıkar.</p>
           ) : (
-            <table className="w-full text-sm">
-              <thead className="text-left text-xs text-muted">
-                <tr>
-                  <th className="pb-2 font-medium">İngilizce</th>
-                  <th className="pb-2 font-medium">Türkçe</th>
-                  <th className="pb-2 font-medium">Mod</th>
-                  <th className="pb-2 text-right font-medium">✓ / ✗</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.weakWords.map((w) => (
-                  <tr key={`${w.english}-${w.mode}`} className="border-t border-border">
-                    <td className="py-2 font-medium">{w.english}</td>
-                    <td className="py-2">{w.turkish}</td>
-                    <td className="py-2 text-muted">{modeShort[w.mode]}</td>
-                    <td className="py-2 text-right tabular-nums">
-                      <span className="text-good">{w.correctCount}</span> / <span className="text-bad">{w.wrongCount}</span>
-                    </td>
+            <div className="max-h-96 overflow-y-auto scrollbar-thin">
+              <table className="w-full text-sm">
+                <thead className="text-left text-xs text-muted">
+                  <tr>
+                    <th className="pb-2 font-medium">İngilizce</th>
+                    <th className="pb-2 font-medium">Türkçe</th>
+                    <th className="pb-2 font-medium">Mod</th>
+                    <th className="pb-2 text-right font-medium">✓ / ✗</th>
+                    <th className="pb-2">
+                      <span className="sr-only">Listeden çıkar</span>
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {data.weakWords.map((w) => (
+                    <tr key={`${w.wordId}-${w.mode}`} className="border-t border-border">
+                      <td className="py-2 font-medium">{w.english}</td>
+                      <td className="py-2">{w.turkish}</td>
+                      <td className="py-2 text-muted">{modeShort[w.mode]}</td>
+                      <td className="py-2 text-right tabular-nums">
+                        <span className="text-good">{w.correctCount}</span> / <span className="text-bad">{w.wrongCount}</span>
+                      </td>
+                      <td className="py-2 pl-2 text-right">
+                        <button
+                          className="rounded-lg p-1.5 text-muted hover:bg-surface-2 hover:text-bad disabled:opacity-50"
+                          aria-label={`${w.english} kelimesini listeden çıkar`}
+                          title="Listeden çıkar"
+                          disabled={remove.isPending}
+                          onClick={() => remove.mutate(w)}
+                        >
+                          <X size={15} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </section>
 

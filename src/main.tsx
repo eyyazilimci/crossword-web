@@ -7,6 +7,8 @@ import { HomePage } from './pages/HomePage'
 import { PlayPage } from './pages/PlayPage'
 import { LibraryPage } from './pages/LibraryPage'
 import { StatsPage } from './pages/StatsPage'
+import { QuizHomePage } from './pages/QuizHomePage'
+import { QuizPlayPage } from './pages/QuizPlayPage'
 import './index.css'
 
 const queryClient = new QueryClient({
@@ -23,6 +25,8 @@ createRoot(document.getElementById('root')!).render(
             <Route path="play/:puzzleId" element={<PlayPage />} />
             <Route path="library" element={<LibraryPage />} />
             <Route path="stats" element={<StatsPage />} />
+            <Route path="quiz" element={<QuizHomePage />} />
+            <Route path="quiz/:sessionId" element={<QuizPlayPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

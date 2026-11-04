@@ -33,6 +33,7 @@ Uygulama http://localhost:5173 adresinde açılır. `/api` istekleri http://loca
 - **Oyunlaştırma:** XP, seviye, günlük seri, rozetler ve zayıf kelime listesi.
 - **Kütüphane:** Kelime kapsamını gösterir (her kelime en az bir bulmacada) ve filtreleme sunar.
 - **Mobil:** Türkçe ekran klavyesi.
+- **Günlük 10 (gramer testi, `/quiz`):** Her gün zayıf konulara göre seçilen 10 çoktan seçmeli gramer sorusu. Cevaptan sonra doğru şık ve Türkçe açıklama görünür, yanlışlar sonraki günlerde geri gelir. 28 konudan herhangi biriyle 10 soruluk pratik, konu bazında ilerleme çubukları, seri ve "Bu soru hatalı" bildirimi. Klavyeden 1–4 ya da A–D ile cevaplanır, Enter ile ilerlenir.
 
 ## Klavye
 

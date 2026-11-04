@@ -1,4 +1,5 @@
 import type {
+  AnswerResult,
   CheckResult,
   Dashboard,
   Difficulty,
@@ -7,6 +8,8 @@ import type {
   Library,
   PlayStatus,
   PuzzleSummary,
+  QuizOverview,
+  QuizSession,
   RevealResult,
   Stats,
   SubmitResult,
@@ -53,6 +56,8 @@ const post = <T>(path: string, body: unknown) => request<T>(path, { method: 'POS
 export const api = {
   dashboard: () => request<Dashboard>('/dashboard'),
   stats: () => request<Stats>('/stats'),
+  removeUnknownWord: (mode: GameMode, wordId: number) =>
+    request<void>(`/unknown-words/${mode}/${wordId}`, { method: 'DELETE' }),
 
   library: (filters: { mode?: GameMode; difficulty?: Difficulty; status?: PlayStatus; page: number; pageSize: number }) => {
     const query = new URLSearchParams()
@@ -79,4 +84,14 @@ export const api = {
     post<RevealResult>(`/sessions/${sessionId}/reveal`, { letters, elapsedSeconds, cells }),
   submit: (sessionId: string, letters: string, elapsedSeconds: number) =>
     post<SubmitResult>(`/sessions/${sessionId}/submit`, { letters, elapsedSeconds }),
+  markUnknownWords: (sessionId: string, wordIds: number[]) =>
+    post<void>(`/sessions/${sessionId}/unknown-words`, { wordIds }),
+
+  quizOverview: () => request<QuizOverview>('/quiz'),
+  dailyQuiz: () => post<QuizSession>('/quiz/daily', {}),
+  practiceQuiz: (topic: string) => post<QuizSession>('/quiz/practice', { topic }),
+  quizSession: (sessionId: string) => request<QuizSession>(`/quiz/${sessionId}`),
+  answerQuiz: (sessionId: string, position: number, choice: number) =>
+    post<AnswerResult>(`/quiz/${sessionId}/answers`, { position, choice }),
+  reportQuestion: (questionId: number) => request<void>(`/quiz/questions/${questionId}/report`, { method: 'POST' }),
 }

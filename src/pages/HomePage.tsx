@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'motion/react'
-import { ArrowRight, CalendarDays, CheckCircle2, Play, Sparkles } from 'lucide-react'
+import { ArrowRight, CalendarDays, CheckCircle2, GraduationCap, Play, Sparkles } from 'lucide-react'
 import clsx from 'clsx'
 import { api, ApiError } from '../api/client'
 import type { Difficulty, GameMode } from '../api/types'
@@ -158,6 +158,21 @@ export function HomePage() {
       </div>
 
       <aside className="space-y-6">
+        <Link to="/quiz" className="card group relative block overflow-hidden p-5 transition-colors hover:border-accent/60">
+          <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-accent-2/20 blur-3xl" />
+          <div className="relative flex items-center gap-4">
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-accent-2 to-accent text-white">
+              <GraduationCap size={22} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-semibold uppercase tracking-wider text-accent-2">İkinci oyun</div>
+              <div className="font-display text-lg font-semibold">Günlük 10 · Gramer</div>
+              <div className="text-sm text-muted">Her gün zayıf konularından 10 çoktan seçmeli soru</div>
+            </div>
+            <ArrowRight size={18} className="text-muted transition-transform group-hover:translate-x-1" />
+          </div>
+        </Link>
+
         {data ? <LevelCard profile={data.profile} /> : <div className="card h-56 animate-pulse" />}
 
         <section className="card p-5">

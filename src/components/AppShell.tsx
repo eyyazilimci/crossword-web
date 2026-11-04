@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router'
-import { BarChart3, Library, Moon, Sun, Swords } from 'lucide-react'
+import { BarChart3, GraduationCap, Library, Moon, Sun, Swords } from 'lucide-react'
 import clsx from 'clsx'
 import { Toaster } from './Toaster'
 
@@ -21,6 +21,7 @@ function useTheme() {
 
 const links = [
   { to: '/', label: 'Oyna', icon: Swords, end: true },
+  { to: '/quiz', label: 'Gramer', icon: GraduationCap, end: false },
   { to: '/library', label: 'Kütüphane', icon: Library, end: false },
   { to: '/stats', label: 'İstatistikler', icon: BarChart3, end: false },
 ]

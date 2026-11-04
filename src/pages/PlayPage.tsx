@@ -287,7 +287,7 @@ export function PlayPage() {
                 icon={<Lightbulb size={16} />}
                 items={[
                   { label: 'Harfi aç', hint: 'O kelimenin puanı gider', onSelect: () => reveal('cell') },
-                  { label: 'Kelimeyi aç', hint: 'Kelime "tekrar" listesine girer', onSelect: () => reveal('word') },
+                  { label: 'Kelimeyi aç', hint: 'O kelimenin puanı gider', onSelect: () => reveal('word') },
                 ]}
               />
               <button
@@ -338,7 +338,13 @@ export function PlayPage() {
       </div>
 
       {completion && (
-        <CompletionModal completion={completion} elapsed={elapsed} onNext={goNext} onHome={() => navigate('/')} />
+        <CompletionModal
+          completion={completion}
+          sessionId={session.id}
+          elapsed={elapsed}
+          onNext={goNext}
+          onHome={() => navigate('/')}
+        />
       )}
     </div>
   )
