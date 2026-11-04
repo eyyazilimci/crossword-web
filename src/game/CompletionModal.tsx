@@ -1,22 +1,89 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
+import { useQueryClient } from '@tanstack/react-query'
 import confetti from 'canvas-confetti'
-import { ArrowRight, Flame, Home, Sparkles } from 'lucide-react'
-import type { Completion } from '../api/types'
+import clsx from 'clsx'
+import { ArrowRight, ChevronDown, Flame, Home, Sparkles } from 'lucide-react'
+import { api, ApiError } from '../api/client'
+import type { Completion, WordResult } from '../api/types'
 import { XpBar } from '../components/LevelCard'
+import { toast } from '../components/Toaster'
 import { formatDuration } from '../lib/labels'
 
 interface Props {
   completion: Completion
+  sessionId: string
   elapsed: number
   onNext(): void
   onHome(): void
 }
 
-export function CompletionModal({ completion, elapsed, onNext, onHome }: Props) {
+interface WordChoicesProps {
+  words: WordResult[]
+  selected: ReadonlySet<number>
+  onToggle(wordId: number): void
+}
+
+function WordChoices({ words, selected, onToggle }: WordChoicesProps) {
+  return (
+    <div className="grid gap-1.5">
+      {words.map((w) => (
+        <label
+          key={w.wordId}
+          className={clsx(
+            'flex cursor-pointer items-center gap-2.5 rounded-lg border px-2.5 py-2 text-sm',
+            selected.has(w.wordId) ? 'border-accent bg-accent/10' : 'border-transparent bg-surface-2',
+          )}
+        >
+          <input
+            type="checkbox"
+            className="h-4 w-4 shrink-0 accent-accent"
+            checked={selected.has(w.wordId)}
+            onChange={() => onToggle(w.wordId)}
+          />
+          <span className="min-w-0">
+            {w.clue} → <b>{w.answer}</b>
+          </span>
+        </label>
+      ))}
+    </div>
+  )
+}
+
+export function CompletionModal({ completion, sessionId, elapsed, onNext, onHome }: Props) {
   const { score, levelBefore, levelAfter } = completion
   const levelUp = levelAfter.level > levelBefore.level
   const missed = completion.words.filter((w) => !w.correct)
+  const others = completion.words.filter((w) => w.correct)
+  const [selected, setSelected] = useState<ReadonlySet<number>>(new Set())
+  const [showOthers, setShowOthers] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const queryClient = useQueryClient()
+
+  const toggle = (wordId: number) =>
+    setSelected((current) => {
+      const next = new Set(current)
+      if (!next.delete(wordId)) next.add(wordId)
+      return next
+    })
+
+  const leave = async (then: () => void) => {
+    if (selected.size > 0) {
+      setSaving(true)
+      try {
+        await api.markUnknownWords(sessionId, [...selected])
+        queryClient.invalidateQueries({ queryKey: ['stats'] })
+        // Already saved: if moving on fails, trying again must not add them twice.
+        setSelected(new Set())
+      } catch (e) {
+        toast(e instanceof ApiError ? e.message : 'Kelimeler eklenemedi', 'bad')
+        return
+      } finally {
+        setSaving(false)
+      }
+    }
+    then()
+  }
 
   useEffect(() => {
     const colors = ['#8b5cf6', '#06b6d4', '#f59e0b', '#22c55e']
@@ -106,26 +173,45 @@ export function CompletionModal({ completion, elapsed, onNext, onHome }: Props) 
           </div>
         )}
 
-        {missed.length > 0 && (
-          <div className="mt-5">
-            <h3 className="mb-2 text-sm font-semibold">Tekrar etmen gereken kelimeler</h3>
-            <div className="flex flex-wrap gap-2">
-              {missed.map((w) => (
-                <span key={`${w.orientation}-${w.number}`} className="rounded-lg bg-surface-2 px-2.5 py-1 text-sm">
-                  {w.clue} → <b>{w.answer}</b>
-                </span>
-              ))}
+        <div className="mt-5">
+          <h3 className="text-sm font-semibold">Bilinemeyenler listesine eklenecekleri seç</h3>
+          <p className="mt-1 text-xs text-muted">
+            Hiçbir kelime kendiliğinden eklenmez. Seçtiklerin bu ekrandan çıkarken eklenir ve arada yeniden karşına çıkar.
+          </p>
+
+          {missed.length > 0 && (
+            <div className="mt-3">
+              <div className="mb-1.5 text-xs font-medium text-muted">Bulamadıkların</div>
+              <WordChoices words={missed} selected={selected} onToggle={toggle} />
             </div>
-            <p className="mt-2 text-xs text-muted">Bu kelimeler sonraki bulmacalarda daha sık karşına çıkacak.</p>
-          </div>
-        )}
+          )}
+
+          {others.length > 0 && (
+            <div className="mt-3">
+              <button
+                type="button"
+                className="flex w-full items-center justify-between rounded-lg py-1 text-xs font-medium text-muted hover:text-fg"
+                aria-expanded={showOthers}
+                onClick={() => setShowOthers((v) => !v)}
+              >
+                Diğer kelimeler ({others.length})
+                <ChevronDown size={14} className={clsx('transition-transform', showOthers && 'rotate-180')} />
+              </button>
+              {showOthers && (
+                <div className="mt-1.5">
+                  <WordChoices words={others} selected={selected} onToggle={toggle} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="mt-6 flex gap-3">
-          <button className="btn btn-ghost flex-1" onClick={onHome}>
+          <button className="btn btn-ghost flex-1" disabled={saving} onClick={() => leave(onHome)}>
             <Home size={16} /> Ana sayfa
           </button>
-          <button className="btn btn-primary flex-1" onClick={onNext}>
-            Sonraki bulmaca <ArrowRight size={16} />
+          <button className="btn btn-primary flex-1" disabled={saving} onClick={() => leave(onNext)}>
+            {selected.size > 0 ? `${selected.size} kelimeyi ekle, devam et` : 'Sonraki bulmaca'} <ArrowRight size={16} />
           </button>
         </div>
       </motion.div>

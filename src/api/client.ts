@@ -82,6 +82,8 @@ export const api = {
     post<RevealResult>(`/sessions/${sessionId}/reveal`, { letters, elapsedSeconds, cells }),
   submit: (sessionId: string, letters: string, elapsedSeconds: number) =>
     post<SubmitResult>(`/sessions/${sessionId}/submit`, { letters, elapsedSeconds }),
+  markUnknownWords: (sessionId: string, wordIds: number[]) =>
+    post<void>(`/sessions/${sessionId}/unknown-words`, { wordIds }),
 
   quizOverview: () => request<QuizOverview>('/quiz'),
   dailyQuiz: () => post<QuizSession>('/quiz/daily', {}),

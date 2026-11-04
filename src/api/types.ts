@@ -85,6 +85,7 @@ export interface ScoreBreakdown {
 }
 
 export interface WordResult {
+  wordId: number
   number: number
   orientation: Orientation
   clue: string

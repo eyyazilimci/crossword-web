@@ -78,10 +78,10 @@ export function StatsPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="card p-5">
           <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-semibold">
-            <Target size={18} className="text-bad" /> Zorlandığın kelimeler
+            <Target size={18} className="text-bad" /> Bilinemeyen kelimeler
           </h2>
           {data.weakWords.length === 0 ? (
-            <p className="text-sm text-muted">Henüz yok. Yanlış yaptığın kelimeler burada listelenir ve bulmacalarda daha sık çıkar.</p>
+            <p className="text-sm text-muted">Henüz yok. Bulmaca sonunda seçtiğin kelimeler burada listelenir ve arada yeniden karşına çıkar.</p>
           ) : (
             <table className="w-full text-sm">
               <thead className="text-left text-xs text-muted">
