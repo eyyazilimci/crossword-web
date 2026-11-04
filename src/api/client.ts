@@ -56,6 +56,8 @@ const post = <T>(path: string, body: unknown) => request<T>(path, { method: 'POS
 export const api = {
   dashboard: () => request<Dashboard>('/dashboard'),
   stats: () => request<Stats>('/stats'),
+  removeUnknownWord: (mode: GameMode, wordId: number) =>
+    request<void>(`/unknown-words/${mode}/${wordId}`, { method: 'DELETE' }),
 
   library: (filters: { mode?: GameMode; difficulty?: Difficulty; status?: PlayStatus; page: number; pageSize: number }) => {
     const query = new URLSearchParams()
@@ -82,6 +84,8 @@ export const api = {
     post<RevealResult>(`/sessions/${sessionId}/reveal`, { letters, elapsedSeconds, cells }),
   submit: (sessionId: string, letters: string, elapsedSeconds: number) =>
     post<SubmitResult>(`/sessions/${sessionId}/submit`, { letters, elapsedSeconds }),
+  markUnknownWords: (sessionId: string, wordIds: number[]) =>
+    post<void>(`/sessions/${sessionId}/unknown-words`, { wordIds }),
 
   quizOverview: () => request<QuizOverview>('/quiz'),
   dailyQuiz: () => post<QuizSession>('/quiz/daily', {}),

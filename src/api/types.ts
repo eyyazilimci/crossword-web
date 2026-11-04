@@ -85,6 +85,7 @@ export interface ScoreBreakdown {
 }
 
 export interface WordResult {
+  wordId: number
   number: number
   orientation: Orientation
   clue: string
@@ -169,7 +170,7 @@ export interface Stats {
     elapsedSeconds: number
     completedAt: string
   }[]
-  weakWords: { english: string; turkish: string; mode: GameMode; correctCount: number; wrongCount: number }[]
+  weakWords: { wordId: number; english: string; turkish: string; mode: GameMode; correctCount: number; wrongCount: number }[]
   achievements: Achievement[]
 }
 
