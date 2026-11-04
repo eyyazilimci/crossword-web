@@ -56,6 +56,8 @@ const post = <T>(path: string, body: unknown) => request<T>(path, { method: 'POS
 export const api = {
   dashboard: () => request<Dashboard>('/dashboard'),
   stats: () => request<Stats>('/stats'),
+  removeUnknownWord: (mode: GameMode, wordId: number) =>
+    request<void>(`/unknown-words/${mode}/${wordId}`, { method: 'DELETE' }),
 
   library: (filters: { mode?: GameMode; difficulty?: Difficulty; status?: PlayStatus; page: number; pageSize: number }) => {
     const query = new URLSearchParams()
